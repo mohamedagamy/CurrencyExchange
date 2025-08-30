@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -17,6 +18,8 @@ import com.example.paymob.vm.Error
 import com.example.paymob.vm.Loading
 import com.example.paymob.vm.Success
 import com.example.paymob.data.cache.CacheManager
+import com.example.paymob.utils.prettyString
+import com.example.paymob.utils.removeDecimalIfInteger
 import com.example.paymob.utils.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -60,7 +63,9 @@ class HomeFragment : Fragment() {
         }
 
         binding.spinnerTo.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {}
+            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                convertCurrency()
+            }
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
     }
@@ -70,14 +75,14 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupSpinners()
         binding.buttonConvert.setOnClickListener { convertCurrency() }
+        binding.editTextFrom.doAfterTextChanged {
+            convertCurrency()
+        }
     }
 
+    @SuppressLint("DefaultLocale")
     private fun convertCurrency() {
-        val amount = binding.editTextFrom.text.toString().toDoubleOrNull()
-        if (amount == null) {
-            binding.textViewTo.setText("Please enter a valid amount")
-            return
-        }
+        val amount = binding.editTextFrom.text.toString().toDoubleOrNull() ?: 0.0
         val fromCurrency = binding.spinnerFrom.selectedItem.toString()
         val toCurrency = binding.spinnerTo.selectedItem.toString()
 
@@ -90,7 +95,7 @@ class HomeFragment : Fragment() {
                         val rates = it?.rates
                         val conversionRate = rates?.get(toCurrency) ?: 0.0
                         val convertedAmount = amount * conversionRate
-                        binding.textViewTo.setText(String.format("%2f",convertedAmount))
+                        binding.textViewTo.setText(convertedAmount.removeDecimalIfInteger())
 
                     }
                     is Error -> state.error?.let { context?.showToast(it) }

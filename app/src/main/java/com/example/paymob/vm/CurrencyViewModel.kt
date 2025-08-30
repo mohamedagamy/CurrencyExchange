@@ -31,28 +31,45 @@ class CurrencyViewModel @Inject constructor(
     fun getCurrencyData(fromCurrency: String) = viewModelScope.launch {
         if(cacheManager.hasCache(Constants.LATEST_CACHE)) {
             val result = cacheManager.getFromCache(Constants.LATEST_CACHE, TypeToken.get(CurrencyResponse::class.java))
-            handleResponse(Resource.success(result) as Resource<CurrencyResponse>)
+            handleLatestRates(Resource.success(result) as Resource<CurrencyResponse>)
         } else {
             withContext(Dispatchers.IO) {
-                currencyUseCase(fromCurrency).collect(::handleResponse)
+                currencyUseCase(fromCurrency).collect(::handleLatestRates)
             }
         }
     }
 
     fun getPopularCurrency() = viewModelScope.launch {
         withContext(Dispatchers.IO) {
-            popularCurrencyUseCase().collect(::handleResponse)
+            popularCurrencyUseCase().collect(::handleLatestRates)
         }
     }
 
-    fun getHistoricalRate(startDate:String) = viewModelScope.async {
-        withContext(Dispatchers.IO) {
-            historicalRateUseCase(startDate).collect(::handleResponse)
+    fun getHistoricalRate(startDate:String) = viewModelScope.launch {
+        if(cacheManager.hasCache(Constants.HISTORY_CACHE)) {
+            val result = cacheManager.getFromCache(Constants.HISTORY_CACHE, TypeToken.get(CurrencyResponse::class.java))
+            handleHistoricalRates(Resource.success(result) as Resource<CurrencyResponse>)
+        }else{
+            withContext(Dispatchers.IO) {
+                historicalRateUseCase(startDate).collect(::handleHistoricalRates)
+            }
         }
     }
 
 
-    private suspend fun handleResponse(it: Resource<CurrencyResponse>) = withContext(Dispatchers.Main) {
+    private suspend fun handleHistoricalRates(it: Resource<CurrencyResponse>) = withContext(Dispatchers.Main) {
+        when (it.status) {
+            Resource.Status.LOADING -> state.value = Loading
+            Resource.Status.SUCCESS -> {
+                state.value = Success(apiResult = it.data)
+                cacheManager.saveToCache(Constants.HISTORY_CACHE, it.data)
+            }
+            Resource.Status.ERROR -> state.value =
+                Error(error = it.error?.data?.message)
+        }
+    }
+
+    private suspend fun handleLatestRates(it: Resource<CurrencyResponse>) = withContext(Dispatchers.Main) {
         when (it.status) {
             Resource.Status.LOADING -> state.value = Loading
             Resource.Status.SUCCESS -> {

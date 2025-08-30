@@ -7,14 +7,20 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.example.paymob.data.cache.CacheManager
+import com.example.paymob.data.model.CurrencyResponse
 import com.example.paymob.vm.CurrencyViewModel
 import com.example.paymob.vm.Error
 import com.example.paymob.vm.Loading
 import com.example.paymob.vm.Success
 import com.example.paymob.databinding.FragmentHistoryBinding
+import com.example.paymob.ui.adapter.CurrencyAdapter
+import com.example.paymob.utils.get4DaysAgo
+import com.example.paymob.utils.get4DaysAgoText
 import com.example.paymob.utils.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 import kotlin.getValue
 
 @AndroidEntryPoint
@@ -23,6 +29,9 @@ class HistoryFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: CurrencyViewModel by viewModels()
+
+    @Inject
+    lateinit var cacheManager: CacheManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,7 +45,7 @@ class HistoryFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        //viewModel.getCurrencyData()
+        viewModel.getHistoricalRate(get4DaysAgo())
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.state.collect { state ->
                 when (state) {
@@ -45,6 +54,7 @@ class HistoryFragment : Fragment() {
                     }
                     is Success -> {
                         context?.showToast("Completed")
+                        showData(state.apiResult)
                     }
                     is Error -> {
                         context?.showToast("Something wen wrong...")
@@ -53,6 +63,14 @@ class HistoryFragment : Fragment() {
             }
         }
 
+    }
+
+    fun showData(apiResult: CurrencyResponse?) {
+        binding.tvDaysAgo.setText(get4DaysAgoText())
+        binding.tvBaseCurrency.setText(apiResult?.base.toString())
+        val adapter = CurrencyAdapter()
+        binding.rvHistory.adapter = adapter
+        adapter.submitList(apiResult?.rates?.map { it.key + ":" + it.value })
     }
 
     override fun onDestroyView() {

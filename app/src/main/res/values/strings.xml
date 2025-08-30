@@ -26,6 +26,9 @@
     </string-array>
 
     <string-array name="currency_array">
+        <item>EUR</item>
+        <item>USD</item>
+        <item>EGP</item>
         <item>AED</item>
         <item>AFN</item>
         <item>ALL</item>
@@ -69,10 +72,8 @@
         <item>DKK</item>
         <item>DOP</item>
         <item>DZD</item>
-        <item>EGP</item>
         <item>ERN</item>
         <item>ETB</item>
-        <item>EUR</item>
         <item>FJD</item>
         <item>FKP</item>
         <item>GBP</item>
@@ -176,7 +177,6 @@
         <item>TZS</item>
         <item>UAH</item>
         <item>UGX</item>
-        <item>USD</item>
         <item>UYU</item>
         <item>UZS</item>
         <item>VEF</item>

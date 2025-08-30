@@ -13,7 +13,7 @@
         android:orientation="horizontal">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tvTargetCurrencyName"
+            android:id="@+id/tvKey"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -21,7 +21,7 @@
             tools:text="EUR" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tvTargetCurrencyValue"
+            android:id="@+id/tvValue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
