@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.currencyconverter"
+    namespace = "com.example.paymob"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.currencyconverter"
+        applicationId = "com.example.paymob"
         minSdk = 24
         targetSdk = 36
         versionCode = 1

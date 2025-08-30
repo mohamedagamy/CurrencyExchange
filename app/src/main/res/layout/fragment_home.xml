@@ -17,41 +17,43 @@
             android:layout_height="match_parent">
 
             <androidx.appcompat.widget.AppCompatSpinner
-                android:id="@+id/baseSpinner"
-                android:layout_width="100dp"
+                android:id="@+id/spinnerFrom"
+                android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="32dp"
                 android:gravity="center"
                 android:contentDescription="@string/select_base_currency"
                 android:textColor="@color/black"
+                app:layout_constraintWidth_percent="0.33"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/ivConvert"
+                android:id="@+id/buttonConvert"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@+id/baseSpinner"
-                app:layout_constraintEnd_toStartOf="@+id/targetSpinner"
-                app:layout_constraintStart_toEndOf="@+id/baseSpinner"
-                app:layout_constraintTop_toTopOf="@+id/baseSpinner"
+                app:layout_constraintBottom_toBottomOf="@+id/spinnerFrom"
+                app:layout_constraintEnd_toStartOf="@+id/spinnerTo"
+                app:layout_constraintStart_toEndOf="@+id/spinnerFrom"
+                app:layout_constraintTop_toTopOf="@+id/spinnerFrom"
                 app:srcCompat="@drawable/ic_currency_exchange_24dp" />
 
 
             <androidx.appcompat.widget.AppCompatSpinner
-                android:id="@+id/targetSpinner"
-                android:layout_width="100dp"
+                android:id="@+id/spinnerTo"
+                android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_marginTop="32dp"
                 android:layout_marginEnd="16dp"
                 android:gravity="center"
+                app:layout_constraintWidth_percent="0.33"
                 android:contentDescription="@string/select_target_currency"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/etBaseCurrency"
+                android:id="@+id/edit_text_from"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_marginTop="16dp"
@@ -63,13 +65,13 @@
                 android:maxLength="6"
                 android:maxLines="1"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/baseSpinner"
-                app:layout_constraintTop_toBottomOf="@+id/baseSpinner"
+                app:layout_constraintStart_toStartOf="@+id/spinnerFrom"
+                app:layout_constraintTop_toBottomOf="@+id/spinnerFrom"
                 app:layout_constraintWidth_percent="0.45" />
 
 
             <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/etTargetCurrency"
+                android:id="@+id/text_view_to"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_marginTop="16dp"
@@ -77,23 +79,10 @@
                 android:gravity="center"
                 android:hint="@string/to"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/targetSpinner"
-                app:layout_constraintTop_toBottomOf="@+id/targetSpinner"
+                app:layout_constraintEnd_toEndOf="@+id/spinnerTo"
+                app:layout_constraintTop_toBottomOf="@+id/spinnerTo"
                 app:layout_constraintWidth_percent="0.45" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnTrendDetails"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/details"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
-        android:layout_gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etTargetCurrency" />
 </FrameLayout>
