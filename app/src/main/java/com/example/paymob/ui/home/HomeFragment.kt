@@ -14,11 +14,11 @@ import androidx.lifecycle.lifecycleScope
 import com.example.paymob.R
 import com.example.paymob.databinding.FragmentHomeBinding
 import com.example.paymob.vm.CurrencyViewModel
-import com.example.paymob.vm.Error
-import com.example.paymob.vm.Loading
-import com.example.paymob.vm.Success
 import com.example.paymob.data.cache.CacheManager
-import com.example.paymob.utils.prettyString
+import com.example.paymob.data.model.CurrencyResponse
+import com.example.paymob.data.state.Loading
+import com.example.paymob.data.state.Success
+import com.example.paymob.data.state.Error
 import com.example.paymob.utils.removeDecimalIfInteger
 import com.example.paymob.utils.showToast
 import dagger.hilt.android.AndroidEntryPoint
@@ -57,17 +57,15 @@ class HomeFragment : Fragment() {
         binding.spinnerFrom.adapter = adapter
         binding.spinnerTo.adapter = adapter
 
-        binding.spinnerFrom.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {}
-            override fun onNothingSelected(parent: AdapterView<*>) {}
-        }
-
-        binding.spinnerTo.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                convertCurrency()
-            }
-            override fun onNothingSelected(parent: AdapterView<*>) {}
-        }
+//        binding.spinnerFrom.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+//            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {}
+//            override fun onNothingSelected(parent: AdapterView<*>) {}
+//        }
+//
+//        binding.spinnerTo.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+//            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {}
+//            override fun onNothingSelected(parent: AdapterView<*>) {}
+//        }
     }
 
     @SuppressLint("ResourceType")
@@ -92,7 +90,7 @@ class HomeFragment : Fragment() {
                 when (state) {
                     is Loading -> context?.showToast("Loading data...")
                     is Success -> state.apiResult?.let {
-                        val rates = it?.rates
+                        val rates = (it?.data as CurrencyResponse).rates
                         val conversionRate = rates?.get(toCurrency) ?: 0.0
                         val convertedAmount = amount * conversionRate
                         binding.textViewTo.setText(convertedAmount.removeDecimalIfInteger())

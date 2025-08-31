@@ -1,6 +1,7 @@
 package com.example.paymob.data.api
 
 import com.example.paymob.data.model.CurrencyResponse
+import com.example.paymob.data.model.ExchangeHistoryResponse
 import retrofit2.http.*
 
 //http://data.fixer.io/api/latest?access_key=0cc6c9fd211ecc4787b293ff65badb08
@@ -8,9 +9,10 @@ import retrofit2.http.*
 interface ApiService {
     @GET("latest?access_key=17f65e517b71fb08f03f04972f1c041f ")
     suspend fun getCurrency(@Query("base") baseCurrency: String): CurrencyResponse
-
-    @GET("latest?access_key=17f65e517b71fb08f03f04972f1c041f")
-    suspend fun getPopularCurrency(@Query("symbols") symbols:String = "GBP,EUR,USD,CAD,CHF,AUD,JPY,NZD,CNY,SGD"): CurrencyResponse
+    @GET("timeseries?access_key=17f65e517b71fb08f03f04972f1c041f")
+    suspend fun getTimeSeries(@Query("start_date") startDate:String,
+                                   @Query("end_date") endDate:String,
+                                   @Query("symbols") symbols:String = "EUR,USD,CAD,EGP,SAR,AED"): CurrencyResponse
 
     @GET("{start_date}?access_key=17f65e517b71fb08f03f04972f1c041f")
     suspend fun getHistoricalRates(@Path("start_date") startDate:String ,@Query("symbols") symbols:String = "GBP,EUR,USD,CAD,CHF,AUD,JPY,NZD,CNY,SGD"): CurrencyResponse

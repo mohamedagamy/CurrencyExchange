@@ -11,6 +11,5 @@ class CurrencyRepository @Inject constructor(
     private val apiService: ApiService,
 ) {
     suspend fun getCurrency(fromCurrency: String): CurrencyResponse = apiService.getCurrency(fromCurrency)
-    suspend fun getPopularCurrency() =  apiService.getPopularCurrency()
     suspend fun getHistoricalRates(startDate:String) =  apiService.getHistoricalRates(startDate)
 }

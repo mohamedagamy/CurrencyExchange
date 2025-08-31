@@ -18,6 +18,21 @@ fun get4DaysAgo():String{
     return result
 }
 
+fun getDaysAgo(day:Int):String{
+    val dateFormat = SimpleDateFormat("YYYY-MM-dd")
+    val calendar = Calendar.getInstance()
+    calendar.add(Calendar.DATE,(day * -1))
+    val result = dateFormat.format(calendar.time)
+    return result
+}
+
+fun getToday():String{
+    val dateFormat = SimpleDateFormat("YYYY-MM-dd")
+    val calendar = Calendar.getInstance()
+    val result = dateFormat.format(calendar.time)
+    return result
+}
+
 fun get4DaysAgoText():String{
     val dateFormat = SimpleDateFormat("dd-MMMM-yyyy")
     val calendar = Calendar.getInstance()

@@ -9,15 +9,17 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.paymob.data.cache.CacheManager
 import com.example.paymob.data.model.CurrencyResponse
+import com.example.paymob.data.state.Loading
+import com.example.paymob.data.state.Success
+import com.example.paymob.data.state.Error
 import com.example.paymob.vm.CurrencyViewModel
-import com.example.paymob.vm.Error
-import com.example.paymob.vm.Loading
-import com.example.paymob.vm.Success
 import com.example.paymob.databinding.FragmentHistoryBinding
 import com.example.paymob.ui.adapter.CurrencyAdapter
 import com.example.paymob.utils.get4DaysAgo
 import com.example.paymob.utils.get4DaysAgoText
+import com.example.paymob.utils.getToday
 import com.example.paymob.utils.showToast
+import com.example.paymob.vm.HistoricalViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,7 +30,7 @@ class HistoryFragment : Fragment() {
     private var _binding: FragmentHistoryBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: CurrencyViewModel by viewModels()
+    private val viewModel: HistoricalViewModel by viewModels()
 
     @Inject
     lateinit var cacheManager: CacheManager
@@ -54,7 +56,7 @@ class HistoryFragment : Fragment() {
                     }
                     is Success -> {
                         context?.showToast("Completed")
-                        showData(state.apiResult)
+                        showData(state.apiResult.data as CurrencyResponse)
                     }
                     is Error -> {
                         context?.showToast("Something wen wrong...")
@@ -66,7 +68,7 @@ class HistoryFragment : Fragment() {
     }
 
     fun showData(apiResult: CurrencyResponse?) {
-        binding.tvDaysAgo.setText(get4DaysAgoText())
+        binding.tvDaysAgo.setText(apiResult?.date.toString())
         binding.tvBaseCurrency.setText(apiResult?.base.toString())
         val adapter = CurrencyAdapter()
         binding.rvHistory.adapter = adapter

@@ -2,6 +2,7 @@ package com.example.paymob.domain
 
 import com.example.paymob.data.common.Resource
 import com.example.paymob.data.model.CurrencyResponse
+import com.example.paymob.data.model.ExchangeHistoryResponse
 import com.example.paymob.data.repository.CurrencyRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.*
