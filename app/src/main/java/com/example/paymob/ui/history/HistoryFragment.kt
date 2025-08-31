@@ -17,6 +17,7 @@ import com.example.paymob.databinding.FragmentHistoryBinding
 import com.example.paymob.ui.adapter.CurrencyAdapter
 import com.example.paymob.utils.get4DaysAgo
 import com.example.paymob.utils.get4DaysAgoText
+import com.example.paymob.utils.getDaysAgo
 import com.example.paymob.utils.getToday
 import com.example.paymob.utils.showToast
 import com.example.paymob.vm.HistoricalViewModel
@@ -35,6 +36,11 @@ class HistoryFragment : Fragment() {
     @Inject
     lateinit var cacheManager: CacheManager
 
+    val adapter = CurrencyAdapter()
+    var historyList = mutableListOf<String>()
+    var daysAgo = 4
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -47,7 +53,7 @@ class HistoryFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        viewModel.getHistoricalRate(get4DaysAgo())
+        viewModel.getHistoricalRate(getDaysAgo(daysAgo))
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.state.collect { state ->
                 when (state) {
@@ -57,6 +63,9 @@ class HistoryFragment : Fragment() {
                     is Success -> {
                         context?.showToast("Completed")
                         showData(state.apiResult.data as CurrencyResponse)
+                        if(daysAgo != 1) {
+                            viewModel.getHistoricalRate(getDaysAgo(daysAgo--))
+                        }
                     }
                     is Error -> {
                         context?.showToast("Something wen wrong...")
@@ -70,9 +79,9 @@ class HistoryFragment : Fragment() {
     fun showData(apiResult: CurrencyResponse?) {
         binding.tvDaysAgo.setText(apiResult?.date.toString())
         binding.tvBaseCurrency.setText(apiResult?.base.toString())
-        val adapter = CurrencyAdapter()
         binding.rvHistory.adapter = adapter
-        adapter.submitList(apiResult?.rates?.map { it.key + ":" + it.value })
+        historyList.addAll(apiResult?.rates?.map { it.key + ":" + it.value } as Collection<String>)
+        adapter.submitList(historyList)
     }
 
     override fun onDestroyView() {

@@ -1,6 +1,7 @@
 package com.example.paymob.data.cache
 
 import android.content.SharedPreferences
+import com.example.paymob.data.model.CurrencyResponse
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import javax.inject.Inject
@@ -25,5 +26,11 @@ class CacheManager @Inject constructor(val gson: Gson,val prefs: SharedPreferenc
     fun hasCache(key: String): Boolean{
         val json = prefs.getString(key, null)
         return !(json.isNullOrBlank())
+    }
+
+    fun hasHistoryCache(key: String): String {
+        val json = prefs.getString(key, null)
+        val result = getFromCache(json.toString(), TypeToken.get(CurrencyResponse::class.java))
+        return result?.date.toString()
     }
 }

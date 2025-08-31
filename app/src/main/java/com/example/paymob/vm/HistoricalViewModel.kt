@@ -27,7 +27,8 @@ class HistoricalViewModel @Inject constructor(
 
     val state = MutableStateFlow<CurrencyUiState>(Loading)
     fun getHistoricalRate(startDate:String) = viewModelScope.launch {
-        if(cacheManager.hasCache(Constants.HISTORY_CACHE)) {
+        val isOldDate = (cacheManager.hasHistoryCache(Constants.HISTORY_CACHE).equals(startDate))
+        if(isOldDate) {
             val result = cacheManager.getFromCache(Constants.HISTORY_CACHE, TypeToken.get(
                 CurrencyResponse::class.java))
             handleHistoricalRates(Resource.success(result))
